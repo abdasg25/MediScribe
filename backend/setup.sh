@@ -68,7 +68,7 @@ if command -v ollama &> /dev/null; then
         else
             echo "⚠️  Qwen model not found. Installing..."
             echo "   This will download ~20GB. Please wait..."
-            ollama pull qwen2.5:32b
+            ollama pull qwen2.5:7b
         fi
     else
         echo "⚠️  Ollama server is not running"
@@ -81,7 +81,7 @@ else
     echo "   curl -fsSL https://ollama.com/install.sh | sh"
     echo ""
     echo "   Then pull Qwen model:"
-    echo "   ollama pull qwen2.5:32b"
+    echo "   ollama pull qwen2.5:7b"
     echo ""
 fi
 

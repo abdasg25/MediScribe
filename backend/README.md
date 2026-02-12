@@ -88,14 +88,14 @@ DATABASE_URL=postgresql://postgres:xxxxx@containers-us-west-xxx.railway.app:5432
 curl -fsSL https://ollama.com/install.sh | sh
 
 # Pull Qwen3 model (choose based on your RAM)
-ollama pull qwen2.5:32b    # Best quality (~20GB RAM needed)
+ollama pull qwen2.5:7b    # Best quality (~20GB RAM needed)
 # OR
 ollama pull qwen2.5:14b    # Medium quality (~16GB RAM)
 # OR
 ollama pull qwen2.5:7b     # Fast, less RAM (~8GB RAM)
 
 # Test Ollama
-ollama run qwen2.5:32b "Hello, test message"
+ollama run qwen2.5:7b "Hello, test message"
 
 # Keep Ollama server running (in separate terminal)
 ollama serve
@@ -252,7 +252,7 @@ CREATE TABLE users (
 | DATABASE_URL | PostgreSQL connection string | postgresql://user:pass@host:5432/db |
 | SECRET_KEY | JWT secret key | Generated automatically |
 | OLLAMA_BASE_URL | Ollama API endpoint | http://localhost:11434 |
-| OLLAMA_MODEL | Qwen model name | qwen2.5:32b |
+| OLLAMA_MODEL | Qwen model name | qwen2.5:7b |
 | ALLOWED_ORIGINS | CORS allowed origins | http://localhost:3000 |
 
 ---

@@ -71,7 +71,7 @@ export default function Header() {
           {user ? (
             <div className="hidden md:flex items-center space-x-4">
               <Link
-                href="/profile"
+                href="/settings"
                 className="flex items-center space-x-2 text-gray-700 hover:text-gray-900"
               >
                 <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
@@ -154,11 +154,11 @@ export default function Header() {
                   Letters
                 </Link>
                 <Link
-                  href="/profile"
+                  href="/settings"
                   className="block py-2 text-gray-600"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  Profile
+                  Settings
                 </Link>
                 <button
                   onClick={handleLogout}

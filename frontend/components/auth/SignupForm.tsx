@@ -1,11 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
 import api from '@/lib/api';
-import { setToken, setUser } from '@/lib/auth';
+import { setToken, setUser, isAuthenticated } from '@/lib/auth';
 import { UserCreate } from '@/types/user';
 import Input from '@/components/shared/Input';
 import Button from '@/components/shared/Button';
@@ -16,12 +16,22 @@ export default function SignupForm() {
   const toast = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
+  useEffect(() => {
+    // Redirect to dashboard if already logged in
+    if (isAuthenticated()) {
+      router.push('/dashboard');
+    }
+  }, [router]);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     watch,
-  } = useForm<UserCreate & { confirmPassword: string }>();
+  } = useForm<UserCreate & { confirmPassword: string }>({
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
+  });
 
   const password = watch('password');
 
@@ -57,9 +67,24 @@ export default function SignupForm() {
     } catch (err: any) {
       console.error('Signup error:', err);
       
-      // Show user-friendly error message
-      const errorMessage = err.response?.data?.detail || 'Signup failed. Please try again.';
-      toast.error(errorMessage);
+      // Handle validation errors with formatted details
+      if (err.response?.data?.formattedDetail) {
+        toast.error(err.response.data.formattedDetail);
+      } else if (err.response?.data?.errors && Array.isArray(err.response.data.errors)) {
+        const validationErrors = err.response.data.errors;
+        const errorMessages = validationErrors
+          .map((e: any) => e.msg?.replace('Value error, ', '') || e.message)
+          .join(', ');
+        toast.error(errorMessages || 'Please check your input and try again.');
+      } else if (err.response?.status === 400) {
+        toast.error('This email is already registered. Please use a different email or login.');
+      } else if (!err.response) {
+        toast.error('Unable to connect to server. Please check your internet connection.');
+      } else {
+        // Show generic error message
+        const errorMessage = err.response?.data?.detail || 'Signup failed. Please try again.';
+        toast.error(errorMessage);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -121,19 +146,34 @@ export default function SignupForm() {
           {...register('specialization')}
         />
 
-        <Input
-          label="Password"
-          type="password"
-          placeholder="••••••••"
-          error={errors.password?.message}
-          {...register('password', {
-            required: 'Password is required',
-            minLength: {
-              value: 8,
-              message: 'Password must be at least 8 characters',
-            },
-          })}
-        />
+        <div className="space-y-2">
+          <Input
+            label="Password"
+            type="password"
+            placeholder="••••••••"
+            error={errors.password?.message}
+            {...register('password', {
+              required: 'Password is required',
+              minLength: {
+                value: 8,
+                message: 'Password must be at least 8 characters',
+              },
+              pattern: {
+                value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+                message: 'Password must contain uppercase, lowercase, and number',
+              },
+            })}
+          />
+          <div className="text-xs text-gray-600 space-y-1 mt-1">
+            <p className="font-medium">Password requirements:</p>
+            <ul className="list-disc list-inside space-y-0.5 ml-1">
+              <li>At least 8 characters long</li>
+              <li>Contains at least one uppercase letter (A-Z)</li>
+              <li>Contains at least one lowercase letter (a-z)</li>
+              <li>Contains at least one number (0-9)</li>
+            </ul>
+          </div>
+        </div>
 
         <Input
           label="Confirm Password"

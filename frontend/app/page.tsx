@@ -1,8 +1,22 @@
+'use client';
+
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Mic, FileText, Zap, Shield, Clock, Check } from 'lucide-react';
 import Button from '@/components/shared/Button';
+import { isAuthenticated } from '@/lib/auth';
 
 export default function LandingPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    // Redirect to dashboard if already logged in
+    if (isAuthenticated()) {
+      router.push('/dashboard');
+    }
+  }, [router]);
+
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}

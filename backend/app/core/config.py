@@ -20,12 +20,12 @@ class Settings(BaseSettings):
     ALLOWED_ORIGINS: List[str] = ["http://localhost:3000"]
     
     # File Upload
-    MAX_FILE_SIZE: int = 52428800  # 50MB
+    MAX_FILE_SIZE: int = 5242880000  # 50MB
     UPLOAD_DIR: str = "uploads"
     
     # Local LLM (Ollama)
     OLLAMA_BASE_URL: str = "http://localhost:11434"
-    OLLAMA_MODEL: str = "qwen2.5:32b"
+    OLLAMA_MODEL: str = "qwen2.5:7b"
     OLLAMA_TEMPERATURE: float = 0.7
     OLLAMA_MAX_TOKENS: int = 2048
     

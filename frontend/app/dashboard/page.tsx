@@ -8,10 +8,24 @@ import Header from '@/components/shared/Header';
 import Card from '@/components/shared/Card';
 import Button from '@/components/shared/Button';
 import { Mic, FileText, Clock, TrendingUp } from 'lucide-react';
+import api from '@/lib/api';
+import { useToast } from '@/components/shared/Toast';
+
+interface DashboardStats {
+  total_recordings: number;
+  total_letters: number;
+  total_transcriptions: number;
+  this_week_recordings: number;
+  this_week_letters: number;
+  estimated_time_saved_hours: number;
+}
 
 export default function DashboardPage() {
   const router = useRouter();
+  const toast = useToast();
   const [user, setUser] = useState<any>(null);
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [isLoadingStats, setIsLoadingStats] = useState(true);
 
   useEffect(() => {
     if (!isAuthenticated()) {
@@ -19,7 +33,23 @@ export default function DashboardPage() {
       return;
     }
     setUser(getUser());
+    fetchStats();
   }, [router]);
+
+  const fetchStats = async () => {
+    setIsLoadingStats(true);
+    try {
+      const response = await api.get<DashboardStats>('/api/stats/dashboard');
+      setStats(response.data);
+    } catch (error: any) {
+      console.error('Failed to fetch stats:', error);
+      if (error.response?.status !== 401) {
+        toast.error('Failed to load dashboard statistics');
+      }
+    } finally {
+      setIsLoadingStats(false);
+    }
+  };
 
   if (!user) {
     return (
@@ -50,7 +80,9 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Total Recordings</p>
-                <p className="text-2xl font-bold text-gray-900 mt-1">0</p>
+                <p className="text-2xl font-bold text-gray-900 mt-1">
+                  {isLoadingStats ? '...' : stats?.total_recordings || 0}
+                </p>
               </div>
               <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center">
                 <Mic className="w-6 h-6 text-primary-600" />
@@ -62,7 +94,9 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Letters Generated</p>
-                <p className="text-2xl font-bold text-gray-900 mt-1">0</p>
+                <p className="text-2xl font-bold text-gray-900 mt-1">
+                  {isLoadingStats ? '...' : stats?.total_letters || 0}
+                </p>
               </div>
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
                 <FileText className="w-6 h-6 text-green-600" />
@@ -74,7 +108,9 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Time Saved</p>
-                <p className="text-2xl font-bold text-gray-900 mt-1">0h</p>
+                <p className="text-2xl font-bold text-gray-900 mt-1">
+                  {isLoadingStats ? '...' : `${stats?.estimated_time_saved_hours || 0}h`}
+                </p>
               </div>
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
                 <Clock className="w-6 h-6 text-blue-600" />
@@ -86,7 +122,9 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">This Week</p>
-                <p className="text-2xl font-bold text-gray-900 mt-1">0</p>
+                <p className="text-2xl font-bold text-gray-900 mt-1">
+                  {isLoadingStats ? '...' : stats?.this_week_letters || 0}
+                </p>
               </div>
               <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
                 <TrendingUp className="w-6 h-6 text-purple-600" />
@@ -98,7 +136,7 @@ export default function DashboardPage() {
         {/* Quick Actions */}
         <Card title="Quick Actions" className="mb-8">
           <div className="grid md:grid-cols-2 gap-4">
-            <Link href="/recording/new">
+            <Link href="/recording">
               <button className="w-full p-6 border-2 border-dashed border-gray-300 rounded-lg hover:border-primary-600 hover:bg-primary-50 transition-colors text-left">
                 <Mic className="w-8 h-8 text-primary-600 mb-2" />
                 <h3 className="font-semibold text-gray-900 mb-1">New Recording</h3>
@@ -106,7 +144,7 @@ export default function DashboardPage() {
               </button>
             </Link>
 
-            <Link href="/letters/new">
+            <Link href="/letters">
               <button className="w-full p-6 border-2 border-dashed border-gray-300 rounded-lg hover:border-primary-600 hover:bg-primary-50 transition-colors text-left">
                 <FileText className="w-8 h-8 text-primary-600 mb-2" />
                 <h3 className="font-semibold text-gray-900 mb-1">Generate Letter</h3>

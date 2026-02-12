@@ -1,11 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
 import api from '@/lib/api';
-import { setToken, setUser } from '@/lib/auth';
+import { setToken, setUser, isAuthenticated } from '@/lib/auth';
 import { UserLogin } from '@/types/user';
 import Input from '@/components/shared/Input';
 import Button from '@/components/shared/Button';
@@ -16,11 +16,21 @@ export default function LoginForm() {
   const toast = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
+  useEffect(() => {
+    // Redirect to dashboard if already logged in
+    if (isAuthenticated()) {
+      router.push('/dashboard');
+    }
+  }, [router]);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<UserLogin>();
+  } = useForm<UserLogin>({
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
+  });
 
   const onSubmit = async (data: UserLogin) => {
     setIsLoading(true);
@@ -45,9 +55,17 @@ export default function LoginForm() {
     } catch (err: any) {
       console.error('Login error:', err);
       
-      // Show user-friendly error message
-      const errorMessage = err.response?.data?.detail || 'Login failed. Please check your credentials.';
-      toast.error(errorMessage);
+      // Handle different error scenarios
+      if (err.response?.status === 401) {
+        toast.error('Invalid email or password. Please try again.');
+      } else if (err.response?.status === 422) {
+        toast.error('Please enter a valid email and password.');
+      } else if (!err.response) {
+        toast.error('Unable to connect to server. Please check your internet connection.');
+      } else {
+        const errorMessage = err.response?.data?.detail || 'Login failed. Please try again later.';
+        toast.error(errorMessage);
+      }
     } finally {
       setIsLoading(false);
     }

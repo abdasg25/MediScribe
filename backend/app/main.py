@@ -7,7 +7,7 @@ from app.core.config import settings
 from app.core.exceptions import MediScribeException
 from app.core.middleware import LoggingMiddleware, SecurityHeadersMiddleware
 from app.core.logger import setup_logger
-from app.api import auth
+from app.api import auth, recordings, letters, stats
 from app.database import engine, Base, SessionLocal
 
 # Setup logger
@@ -56,12 +56,30 @@ async def mediscribe_exception_handler(request: Request, exc: MediScribeExceptio
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
     """Handle request validation errors"""
-    logger.error(f"Validation error: {exc.errors()}")
+    errors = exc.errors()
+    logger.error(f"Validation error: {errors}")
+    
+    # Format errors to be JSON serializable
+    formatted_errors = []
+    for error in errors:
+        formatted_error = {
+            "loc": error.get("loc", []),
+            "msg": error.get("msg", ""),
+            "type": error.get("type", ""),
+        }
+        # Add input if it exists and is serializable
+        if "input" in error:
+            try:
+                formatted_error["input"] = str(error["input"])
+            except:
+                pass
+        formatted_errors.append(formatted_error)
+    
     return JSONResponse(
         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
         content={
             "detail": "Validation error",
-            "errors": exc.errors()
+            "errors": formatted_errors
         }
     )
 
@@ -85,6 +103,9 @@ async def general_exception_handler(request: Request, exc: Exception):
 
 # Include routers
 app.include_router(auth.router)
+app.include_router(recordings.router)
+app.include_router(letters.router)
+app.include_router(stats.router)
 
 @app.on_event("startup")
 async def startup_event():

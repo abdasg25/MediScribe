@@ -1,24 +1,36 @@
-export interface AudioFile {
+export type RecordingStatus = 'uploading' | 'processing' | 'completed' | 'failed';
+
+export interface Recording {
   id: string;
   user_id: string;
-  file_name: string;
+  filename: string;
   file_path: string;
+  file_size: number;
   duration?: number;
-  status: 'uploading' | 'processing' | 'completed' | 'failed';
-  uploaded_at: string;
-}
-
-export interface AudioUploadResponse {
-  id: string;
-  file_name: string;
-  status: string;
-  message: string;
-}
-
-export interface Transcription {
-  id: string;
-  audio_id: string;
-  text: string;
-  language?: string;
+  transcription?: string;
+  status: RecordingStatus;
   created_at: string;
+  updated_at: string;
+  transcribed_at?: string;
+  error_message?: string;
 }
+
+export interface RecordingListResponse {
+  recordings: Recording[];
+  total: number;
+  page: number;
+  page_size: number;
+}
+
+export interface TranscriptionResponse {
+  recording_id: string;
+  transcription: string;
+  status: RecordingStatus;
+  transcribed_at: string;
+}
+
+export interface AudioPlayerProps {
+  src: string;
+  filename: string;
+}
+

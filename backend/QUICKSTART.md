@@ -110,7 +110,7 @@ pip install -r requirements.txt
 
 # 4. Install Ollama and Qwen
 curl -fsSL https://ollama.com/install.sh | sh
-ollama pull qwen2.5:32b
+ollama pull qwen2.5:7b
 
 # 5. Start Ollama (Terminal 1)
 ollama serve
