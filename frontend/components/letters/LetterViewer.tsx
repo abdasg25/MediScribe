@@ -360,7 +360,7 @@ export default function LetterViewer({ letter, onClose, onLetterUpdated }: Lette
                   Save Changes
                 </Button>
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   onClick={() => {
                     setIsEditing(false);
                     setEditedContent(letter.content);
@@ -372,12 +372,12 @@ export default function LetterViewer({ letter, onClose, onLetterUpdated }: Lette
               </>
             ) : (
               <>
-                <Button variant="outline" onClick={() => setIsEditing(true)}>
+                <Button variant="secondary" onClick={() => setIsEditing(true)}>
                   <Edit className="mr-2 h-4 w-4" />
                   Edit
                 </Button>
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   onClick={handleCopy}
                   disabled={isCopying}
                 >
@@ -394,7 +394,7 @@ export default function LetterViewer({ letter, onClose, onLetterUpdated }: Lette
                   )}
                 </Button>
                 <div className="relative group">
-                  <Button variant="outline">
+                  <Button variant="secondary">
                     <Download className="mr-2 h-4 w-4" />
                     Export
                   </Button>
@@ -422,7 +422,7 @@ export default function LetterViewer({ letter, onClose, onLetterUpdated }: Lette
               </>
             )}
           </div>
-          <Button variant="outline" onClick={onClose}>
+          <Button variant="secondary" onClick={onClose}>
             Close
           </Button>
         </div>

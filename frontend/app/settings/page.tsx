@@ -142,7 +142,6 @@ export default function SettingsPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Input
                     label="First Name *"
-                    icon={User}
                     placeholder="John"
                     {...registerProfile('first_name', {
                       required: 'First name is required',
@@ -156,7 +155,6 @@ export default function SettingsPage() {
 
                   <Input
                     label="Last Name *"
-                    icon={User}
                     placeholder="Doe"
                     {...registerProfile('last_name', {
                       required: 'Last name is required',
@@ -215,7 +213,6 @@ export default function SettingsPage() {
                 <Input
                   label="Current Password *"
                   type="password"
-                  icon={Lock}
                   placeholder="Enter current password"
                   {...registerPassword('current_password', {
                     required: 'Current password is required',
@@ -226,7 +223,6 @@ export default function SettingsPage() {
                 <Input
                   label="New Password *"
                   type="password"
-                  icon={Lock}
                   placeholder="Enter new password"
                   {...registerPassword('new_password', {
                     required: 'New password is required',
@@ -245,7 +241,6 @@ export default function SettingsPage() {
                 <Input
                   label="Confirm New Password *"
                   type="password"
-                  icon={Lock}
                   placeholder="Confirm new password"
                   {...registerPassword('confirm_password', {
                     required: 'Please confirm your password',

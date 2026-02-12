@@ -267,7 +267,7 @@ export default function AudioRecorder({ onRecordingUploaded }: AudioRecorderProp
                 <Pause className="mr-2 h-5 w-5" />
                 Pause
               </Button>
-              <Button onClick={stopRecording} variant="outline" size="lg">
+              <Button onClick={stopRecording} variant="ghost" size="lg">
                 <Square className="mr-2 h-5 w-5" />
                 Stop
               </Button>
@@ -280,7 +280,7 @@ export default function AudioRecorder({ onRecordingUploaded }: AudioRecorderProp
                 <Play className="mr-2 h-5 w-5" />
                 Resume
               </Button>
-              <Button onClick={stopRecording} variant="outline" size="lg">
+              <Button onClick={stopRecording} variant="ghost" size="lg">
                 <Square className="mr-2 h-5 w-5" />
                 Stop
               </Button>
@@ -321,7 +321,7 @@ export default function AudioRecorder({ onRecordingUploaded }: AudioRecorderProp
                 </Button>
                 <Button
                   onClick={discardRecording}
-                  variant="outline"
+                  variant="ghost"
                   disabled={isUploading}
                   size="lg"
                 >

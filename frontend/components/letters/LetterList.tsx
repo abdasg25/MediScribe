@@ -100,7 +100,7 @@ export default function LetterList({ letters, onLetterDeleted, onViewLetter }: L
   return (
     <div className="space-y-4">
       {letters.map((letter) => (
-        <Card key={letter.id} hover>
+        <Card key={letter.id}>
           <div className="space-y-4">
             {/* Header */}
             <div className="flex items-start justify-between">
@@ -179,7 +179,7 @@ export default function LetterList({ letters, onLetterDeleted, onViewLetter }: L
                   <>
                     {onViewLetter && (
                       <Button
-                        variant="outline"
+                        variant="secondary"
                         size="sm"
                         onClick={() => onViewLetter(letter)}
                       >
@@ -188,7 +188,7 @@ export default function LetterList({ letters, onLetterDeleted, onViewLetter }: L
                       </Button>
                     )}
                     <Button
-                      variant="outline"
+                      variant="secondary"
                       size="sm"
                       onClick={() => handleCopy(letter.content, letter.id)}
                       disabled={copyingId === letter.id}

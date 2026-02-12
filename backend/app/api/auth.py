@@ -6,7 +6,7 @@ from app.services.auth_service import AuthService
 from app.dependencies import get_current_user
 from app.models.user import User
 from app.core.logger import setup_logger
-from app.core.security import verify_password, hash_password
+from app.core.security import verify_password, get_password_hash
 
 logger = setup_logger(__name__)
 
@@ -188,7 +188,7 @@ def change_password(
         )
     
     # Hash and update new password
-    current_user.password_hash = hash_password(password_data.new_password)
+    current_user.password_hash = get_password_hash(password_data.new_password)
     db.commit()
     
     logger.info(f"Password changed successfully for: {current_user.email}")
