@@ -4,7 +4,7 @@ AI-powered Clinical Documentation Assistant for Healthcare Professionals
 
 ## Overview
 
-MediScribe is a comprehensive medical documentation platform that streamlines the creation of clinical letters and medical records. Using advanced AI technologies including OpenAI Whisper for speech-to-text transcription and local LLM (Qwen3) for intelligent letter generation, MediScribe transforms audio recordings of medical consultations into professional, formatted clinical documentation.
+MediScribe is a comprehensive medical documentation platform that streamlines the creation of clinical letters and medical records. Using advanced AI technologies including OpenAI Whisper for speech-to-text transcription and Google Gemini API for intelligent letter generation, MediScribe transforms audio recordings of medical consultations into professional, formatted clinical documentation.
 
 ## Key Features
 
@@ -33,7 +33,7 @@ MediScribe is a comprehensive medical documentation platform that streamlines th
   - Sick Notes
   - Custom Letters
 
-- **AI-Powered Generation**: Using local Qwen3/Ollama LLM
+- **AI-Powered Generation**: Using Google Gemini API (cloud-based)
 - **Patient Information**: Include patient demographics
 - **Custom Instructions**: Guide AI output with specific requirements
 - **Rich Editing**: Edit generated letters with markdown support
@@ -67,7 +67,7 @@ MediScribe is a comprehensive medical documentation platform that streamlines th
 - **Password Security**: bcrypt 4.1.2
 - **AI/ML**:
   - OpenAI Whisper (base model) for transcription
-  - Ollama 0.6.1 with Qwen 2.5:7b for letter generation
+  - Google Gemini API (gemini-1.5-flash) for letter generation
 - **Validation**: Pydantic 2.12.5
 - **Server**: Uvicorn (ASGI)
 
@@ -86,19 +86,19 @@ MediScribe is a comprehensive medical documentation platform that streamlines th
 
 ### AI Models
 - **Transcription**: OpenAI Whisper (local/base model)
-- **Letter Generation**: Qwen 2.5:7b via Ollama (local LLM)
+- **Letter Generation**: Google Gemini 1.5 Flash (cloud API)
 
 ## Prerequisites
 
 ### Required Software
 - **Node.js**: 18.x or higher
 - **Python**: 3.11 or higher
-- **Ollama**: Latest version
+- **Google Gemini API Key**: Free tier available at https://ai.google.dev/
 - **Git**: For version control
 
 ### System Requirements
-- **RAM**: Minimum 8GB (16GB recommended for Whisper + Qwen)
-- **Storage**: 10GB+ free space (for AI models)
+- **RAM**: Minimum 4GB (8GB recommended for Whisper)
+- **Storage**: 5GB+ free space (for Whisper model)
 - **OS**: macOS, Linux, or Windows with WSL2
 
 ## Installation
@@ -147,17 +147,12 @@ npm install
 cp .env.example .env
 ```
 
-### 4. Ollama Setup
+### 4. Get Google Gemini API Key
 
 ```bash
-# Install Ollama (macOS/Linux)
-curl https://ollama.ai/install.sh | sh
-
-# Pull Qwen model
-ollama pull qwen2.5:7b
-
-# Start Ollama server
-ollama serve
+# Visit https://ai.google.dev/ and sign in with your Google account
+# Click "Get API Key" and create a new API key
+# Copy the API key for the next step
 ```
 
 ## Configuration
@@ -178,9 +173,9 @@ ACCESS_TOKEN_EXPIRE_MINUTES=30
 # CORS
 ALLOWED_ORIGINS=["http://localhost:3000"]
 
-# Ollama
-OLLAMA_BASE_URL=http://localhost:11434
-OLLAMA_MODEL=qwen2.5:7b
+# Google Gemini API
+GEMINI_API_KEY=your-gemini-api-key-here
+GEMINI_MODEL=gemini-1.5-flash
 
 # File Upload
 MAX_UPLOAD_SIZE=100MB

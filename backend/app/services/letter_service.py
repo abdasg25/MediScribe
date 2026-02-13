@@ -6,13 +6,17 @@ from sqlalchemy.orm import Session
 from typing import List, Optional
 from uuid import UUID
 from datetime import datetime
+import google.generativeai as genai
 
 from app.models.letter import Letter, LetterType, LetterStatus
 from app.models.recording import Recording
 from app.schemas.letter import LetterCreate, LetterUpdate, GenerateLetterRequest
 from app.core.logger import logger
 from app.core.exceptions import NotFoundError, DatabaseError, ValidationError
-from app.services.ollama_service import OllamaService
+from app.core.config import settings
+
+# Configure Gemini API
+genai.configure(api_key=settings.GEMINI_API_KEY)
 
 
 class LetterService:
@@ -420,11 +424,23 @@ Generate a well-structured medical letter addressing all relevant points profess
             
             logger.info(f"Generating letter {letter.id} with AI")
             
-            # Generate content using Ollama
-            generated_content = OllamaService.generate_completion(
-                prompt=prompt,
-                system_message=template["system_message"]
-            )
+            # Generate content using Google Gemini API
+            try:
+                model = genai.GenerativeModel(
+                    model_name=settings.GEMINI_MODEL,
+                    generation_config={
+                        "temperature": settings.GEMINI_TEMPERATURE,
+                        "max_output_tokens": settings.GEMINI_MAX_TOKENS,
+                    },
+                    system_instruction=template["system_message"]
+                )
+                
+                response = model.generate_content(prompt)
+                generated_content = response.text
+                
+            except Exception as e:
+                logger.error(f"Gemini API generation failed: {str(e)}")
+                raise DatabaseError(f"AI generation failed: {str(e)}")
             
             # Update letter with generated content
             letter.content = generated_content

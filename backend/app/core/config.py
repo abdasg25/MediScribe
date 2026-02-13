@@ -23,11 +23,11 @@ class Settings(BaseSettings):
     MAX_FILE_SIZE: int = 5242880000  # 50MB
     UPLOAD_DIR: str = "uploads"
     
-    # Local LLM (Ollama)
-    OLLAMA_BASE_URL: str = "http://localhost:11434"
-    OLLAMA_MODEL: str = "qwen2.5:7b"
-    OLLAMA_TEMPERATURE: float = 0.7
-    OLLAMA_MAX_TOKENS: int = 2048
+    # Google Gemini API
+    GEMINI_API_KEY: str
+    GEMINI_MODEL: str = "gemini-1.5-flash"
+    GEMINI_TEMPERATURE: float = 0.7
+    GEMINI_MAX_TOKENS: int = 2048
     
     # Whisper
     WHISPER_MODEL: str = "base"  # tiny, base, small, medium, large

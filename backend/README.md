@@ -10,7 +10,7 @@
 - ✅ Password hashing (bcrypt)
 - ✅ User registration & login APIs
 - ✅ Modular, reusable code architecture
-- ✅ Ollama integration for local LLM
+- ✅ Google Gemini API integration for letter generation
 - ✅ Configuration management
 
 ## 📁 Project Structure
@@ -81,42 +81,31 @@ pip install -r requirements.txt
 DATABASE_URL=postgresql://postgres:xxxxx@containers-us-west-xxx.railway.app:5432/railway
 ```
 
-### 3. Install Ollama & Qwen3
+### 3. Get Google Gemini API Key
 
 ```bash
-# Install Ollama
-curl -fsSL https://ollama.com/install.sh | sh
-
-# Pull Qwen3 model (choose based on your RAM)
-ollama pull qwen2.5:7b    # Best quality (~20GB RAM needed)
-# OR
-ollama pull qwen2.5:14b    # Medium quality (~16GB RAM)
-# OR
-ollama pull qwen2.5:7b     # Fast, less RAM (~8GB RAM)
-
-# Test Ollama
-ollama run qwen2.5:7b "Hello, test message"
-
-# Keep Ollama server running (in separate terminal)
-ollama serve
+# 1. Visit https://ai.google.dev/
+# 2. Sign in with your Google account
+# 3. Click "Get API Key" → "Create API key"
+# 4. Copy the generated API key
+# 5. Paste it in your .env file as GEMINI_API_KEY
 ```
 
 ### 4. Update .env Configuration
 
 The `.env` file has been pre-configured with:
 - ✅ JWT Secret Key (already generated)
-- ✅ Ollama settings
+- ✅ Google Gemini API settings
 - ⚠️ DATABASE_URL (needs Railway URL)
+- ⚠️ GEMINI_API_KEY (needs your API key)
 
-Just update the `DATABASE_URL` with your Railway database URL.
+Update the following in your `.env` file:
+1. `DATABASE_URL` with your Railway database URL
+2. `GEMINI_API_KEY` with your Google AI API key
 
 ### 5. Run the Backend
 
 ```bash
-# Terminal 1: Run Ollama server
-ollama serve
-
-# Terminal 2: Run FastAPI
 cd /Users/abdulrehman/Documents/MediScribe/backend
 source venv/bin/activate
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
